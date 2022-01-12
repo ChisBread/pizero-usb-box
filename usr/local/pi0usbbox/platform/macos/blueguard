@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+SLEEP=0
+LDIS=0
+LLDIS=0
+while true
+do
+    DIS=`sudo bt-rssi $1 distance 2>/dev/null | sed -r 's/([0-9]+).*/\1/'`
+    AP=0
+    # 12米外逼近
+    if [ $LLDIS -le 10 -a $DIS -le 6 -a $DIS -lt $LDIS -a $LDIS -lt $LLDIS ]; then
+        AP=1
+    fi
+    echo `date`" check dist:$DIS $LDIS $LLDIS"
+    if [ $DIS -ge 4 ]; then
+        if [ $SLEEP -eq 0 ]; then
+            # dual check
+            if [ $DIS -le 9 ]; then
+                DIS=`sudo bt-rssi $1 distance 2>/dev/null | sed -r 's/([0-9]+).*/\1/'`
+            fi
+            if [ $DIS -ge 4 ]; then
+                /usr/local/pi0usbbox/platform/macos/sleepwithkeyboard
+                SLEEP=1
+                echo `date`" set lock dist:$DIS $LDIS $LLDIS"
+                sleep 6
+            fi
+        fi
+    fi
+    
+    if [ $DIS -le 4 -o $AP -eq 1 ]; then
+        if [ $SLEEP -eq 1 ]; then
+            /usr/local/pi0usbbox/platform/macos/unlock $2
+            SLEEP=0
+            echo `date`" set unlock dist:$DIS $LDIS $LLDIS"
+            sleep 6
+        fi
+    fi
+    LLDIS=$LDIS
+    LDIS=$DIS
+    sleep 1
+done
+

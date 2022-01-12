@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+source /usr/local/pi0usbbox/confenv
+# initial
+cd /sys/kernel/config/usb_gadget/
+mkdir -p chisusb
+cd chisusb
+echo 0x1d6b > idVendor # Linux Foundation
+echo 0x0104 > idProduct # Multifunction Composite Gadget
+echo 0x0100 > bcdDevice # v1.0.0
+echo 0x0200 > bcdUSB # USB2
+mkdir -p strings/0x409
+echo "fedcba9876543210" > strings/0x409/serialnumber
+echo "Bread Homemade" > strings/0x409/manufacturer
+echo "chisbread.com USB Device" > strings/0x409/product
+mkdir -p configs/c.1/strings/0x409
+echo "Config 1: ECM network" > configs/c.1/strings/0x409/configuration
+echo 250 > configs/c.1/MaxPower
+# Add functions here
+
+## Ethernet Adapter
+mkdir -p functions/ecm.usb0
+#### first byte of address must be even
+echo $ECM_HOST > functions/ecm.usb0/host_addr
+echo $EMC_SELF > functions/ecm.usb0/dev_addr
+ln -s functions/ecm.usb0 configs/c.1/
+## Serial Adapter
+mkdir -p functions/acm.usb0
+ln -s functions/acm.usb0 configs/c.1/
+
+## HID Device (Keyboard/Mouse/Joystick)
+#### Keyboard
+mkdir -p functions/hid.usb0
+echo 1 > functions/hid.usb0/protocol
+echo 1 > functions/hid.usb0/subclass
+echo 8 > functions/hid.usb0/report_length
+echo -ne \\x05\\x01\\x09\\x06\\xa1\\x01\\x05\\x07\\x19\\xe0\\x29\\xe7\\x15\\x00\\x25\\x01\\x75\\x01\\x95\\x08\\x81\\x02\\x95\\x01\\x75\\x08\\x81\\x03\\x95\\x05\\x75\\x01\\x05\\x08\\x19\\x01\\x29\\x05\\x91\\x02\\x95\\x01\\x75\\x03\\x91\\x03\\x95\\x06\\x75\\x08\\x15\\x00\\x25\\x65\\x05\\x07\\x19\\x00\\x29\\x65\\x81\\x00\\xc0 > functions/hid.usb0/report_desc
+ln -s functions/hid.usb0 configs/c.1/
+#### Mouse
+mkdir -p functions/hid.usb1
+echo 1 > functions/hid.usb1/protocol
+echo 1 > functions/hid.usb1/subclass
+echo 8 > functions/hid.usb1/report_length
+echo -ne \\x05\\x01\\x09\\x02\\xa1\\x01\\x09\\x01\\xa1\\x00\\x05\\x09\\x19\\x01\\x29\\x03\\x15\\x00\\x25\\x01\\x95\\x03\\x75\\x01\\x81\\x02\\x95\\x01\\x75\\x05\\x81\\x01\\x05\\x01\\x09\\x30\\x09\\x31\\x09\\x38\\x15\\x81\\x25\\x7f\\x75\\x08\\x95\\x02\\x81\\x06\\xc0\\xc0 > functions/hid.usb1/report_desc
+ln -s functions/hid.usb1 configs/c.1/
+
+## Mass Storage (USB Disk)
+losetup /dev/loop8 $USBFILE -o 1048576 # 如果错误则换成没有被占用的loop
+mkdir -p ${USBFILE/img/d}
+mount -o loop,ro,offset=1048576 -t exfat $USBFILE ${USBFILE/img/d}
+mkdir -p functions/mass_storage.usb0
+echo 1 > functions/mass_storage.usb0/stall
+echo 0 > functions/mass_storage.usb0/lun.0/cdrom
+echo 0 > functions/mass_storage.usb0/lun.0/ro
+echo 0 > functions/mass_storage.usb0/lun.0/nofua
+echo $USBFILE > functions/mass_storage.usb0/lun.0/file
+echo 1 > functions/mass_storage.usb0/lun.0/removable
+echo "ChisDisk" > functions/mass_storage.usb0/lun.0/inquiry_string
+
+ln -s functions/mass_storage.usb0 configs/c.1/
+## TODO: JoyStick 
+
+# see gadget configurations below
+# End functions
+ls /sys/class/udc > UDC
+
+# create
+## network
+# settings on /etc/network/interface
+# ifconfig usb0 192.168.2.2 netmask 255.255.255.0 up
+# route add -net default gw 192.168.2.1
+## serial service
+# sudo systemctl enable getty@ttyGS0.service
+chmod 777 /dev/hidg*

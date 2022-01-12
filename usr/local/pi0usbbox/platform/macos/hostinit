@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+/usr/local/pi0usbbox/platform/macos/openterm
+# bash
+hid-print bash
+hid-sendkeys enter
+hid-printfile /usr/local/pi0usbbox/platform/macos/host/init
+hid-sendkeys enter
+sleep 0.1
+hid-print exit
+hid-sendkeys enter
+sleep 0.1
+hid-sendkeys left-meta q

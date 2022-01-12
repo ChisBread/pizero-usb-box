@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# open search
+hid-sendkeys left-meta space
+sleep 0.1
+# open terminal
+hid-print terminal
+sleep 0.3
+hid-sendkeys enter
+sleep 0.3
+# clear
+hid-sendkeys left-ctrl c
+hid-print clear
+hid-sendkeys enter
+sleep 0.1

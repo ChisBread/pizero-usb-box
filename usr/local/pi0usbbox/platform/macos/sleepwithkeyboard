@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+hid-sendkeys left-ctrl left-meta q
+
+

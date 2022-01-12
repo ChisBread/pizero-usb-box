@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+source /usr/local/pi0usbbox/confenv
+while [ ! -e /dev/hidg0 ]
+do echo ''>/dev/null;
+done
+start_date=`cat /home/pi/workspace/usbdisk.d/.settings/init_host_date`
+init_date=`cat /home/pi/workspace/usbdisk.d/.settings/init_host_date`
+for num in {1..10}
+do
+	ping -w 2 192.168.2.1
+	if [ $? -eq 0 ] ; then
+		exit
+	fi
+
+	if [ $init_date -le $start_date ]; then
+		/usr/local/pi0usbbox/platform/macos/hostinit
+		init_date=`cat /home/pi/workspace/usbdisk.d/.settings/init_host_date`
+	fi
+done

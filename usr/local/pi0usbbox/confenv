@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+## MAC地址第一个字节必须是偶数
+export ECM_HOST="48:6f:73:74:50:f3" # "HostPC"
+export ECM_SELF="42:61:64:55:53:f2" # "BadUSB"
+export USBFILE=/home/pi/workspace/usbdisk.img

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# open search
+hid-sendkeys left-meta space
+sleep 0.1
+# open Safari
+hid-print Safari
+sleep 0.3
+hid-sendkeys enter
+sleep 0.3
+hid-sendkeys left-alt left-meta w
+sleep 0.1
+hid-sendkeys left-shift left-meta n
+sleep 0.1

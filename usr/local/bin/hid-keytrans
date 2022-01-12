@@ -1,0 +1,35 @@
+#!/bin/python3
+import sys
+cmap = {
+    '\n':"enter", 
+    ' ':"space", '\t':"tab",
+    '-':'minus', '=':'equal',
+    '_':'left-shift minus', '+':'left-shift equal',
+
+    '[':'lbracket', ']':'rbracket',
+    '{':'left-shift lbracket', '}':'left-shift rbracket',
+
+    '\\':"backslash", '/':"slash",
+    '|':"left-shift backslash", '?':"left-shift slash",
+
+    ';':'semicolon', '\'':'quote', ',':"comma", '.':"stop",
+    ':':'left-shift semicolon', '"':'left-shift quote', '<':"left-shift comma", '>':"left-shift stop",
+
+    '`':"backquote", '~':"left-shift backquote"
+}
+def trans(c):
+    if (c >= '0' and c <= '9') or (c >= 'a' and c <= 'z'):
+        return c
+    if c >= 'A' and c <= 'Z':
+        return "left-shift "+c.lower()
+    pos = ")!@#$%^&*(".find(c)
+    if pos != -1:
+        return "left-shift "+str(pos)
+    if c in cmap:
+        return cmap[c]
+    sys.stderr.write("unknown char'"+c+"'"+"\n")
+while True:
+    c = sys.stdin.read(1)
+    if not c:
+        break
+    print("hid-sendkeys"+" "+trans(c))

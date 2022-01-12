@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+if [ "$1" == "-f" ]; then
+    sudo cp -r usr/ /
+else
+    sudo cp -i -r usr/ /
+fi
+source /usr/local/pi0usbbox/confenv
+
+## command & resource
+mkdir -p /home/pi/workspace
+if [ ! -e $USBFILE ]; then
+    dd if=/dev/zero of=$USBFILE bs=4M count=128 # 4M*128=512M
+fi
+
+## /boot/config.txt
+if [ "`sudo grep -P '^dtoverlay=dwc2' /boot/config.txt`" = "" ]; then
+    echo "dtoverlay=dwc2" | sudo tee -a /boot/config.txt
+fi
+
+## /etc/modules
+if [ "`sudo grep -P '^dwc2' /etc/modules`" = "" ]; then
+    echo "dwc2" | sudo tee -a /etc/modules
+fi
+if [ "`sudo grep -P '^libcomposite' /etc/modules`" = "" ]; then
+    echo "libcomposite" | sudo tee -a /etc/modules
+fi
+
+## /etc/rc.local
+if [ "`sudo grep -P '^/usr/local/bin/gadget-initial' /etc/rc.local`" = "" ]; then
+    sudo cat /etc/rc.local|grep -v -P '^\s*exit' > /tmp/rc.local.noexit
+    sudo mv /tmp/rc.local.noexit /etc/rc.local
+    echo "/usr/local/bin/gadget-initial" | sudo tee -a /etc/rc.local
+    echo "exit 0" | sudo tee -a /etc/rc.local
+    sudo chown root /etc/rc.local
+    sudo chmod 755 /etc/rc.local
+fi

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+source /usr/local/pi0usbbox/confenv
+sudo umount $USBFILE
+sudo mount -o loop,ro,offset=1048576 -t exfat $USBFILE ${USBFILE/img/d}

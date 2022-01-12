@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# open search
+hid-sendkeys space
+sleep 0.5
+hid-sendkeys space
+hid-sendkeys space
+sleep 2.5
+hid-sendkeys backspace
+hid-sendkeys backspace
+hid-sendkeys backspace
+hid-print $@
+hid-sendkeys enter

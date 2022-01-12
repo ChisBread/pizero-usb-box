@@ -1,0 +1,98 @@
+#!/bin/python3
+#-*- coding: UTF-8 -*-
+
+import curses
+from curses.textpad import Textbox, rectangle
+import locale
+import os
+locale.setlocale(locale.LC_ALL, '')
+cmap = {
+    "KEY_BACKSPACE":"backspace", "KEY_DC":"delete", "KEY_IC":"insert",
+    "KEY_PPAGE":"pageup", "KEY_NPAGE":"pagedown",
+    "KEY_HOME":"home", "KEY_END":"end",
+    "KEY_LEFT":"left", "KEY_RIGHT":"right",
+    "KEY_UP":"up", "KEY_DOWN":"down",
+    ' ':"space", '\t':"tab",
+    '-':'minus', '=':'equal',
+    '_':'left-shift minus', '+':'left-shift equal',
+
+    '[':'lbracket', ']':'rbracket',
+    '{':'left-shift lbracket', '}':'left-shift rbracket',
+
+    '\\':"backslash", '/':"slash",
+    '|':"left-shift backslash", '?':"left-shift slash",
+
+    ';':'semicolon', '\'':'quote', ',':"comma", '.':"stop",
+    ':':'left-shift semicolon', '"':'left-shift quote', '<':"left-shift comma", '>':"left-shift stop",
+
+    '`':"backquote", '~':"left-shift backquote"
+}
+specctrl = {
+    'J':"enter", 'i':"tab",
+    #'D':"left-ctrl left", 'C':"left-ctrl right", 'A':"left-ctrl up", 'B':"left-ctrl down"
+}
+def printmod(stdscr, c):
+    stdscr.clear()
+    stdscr.addstr(0, 0, "Enter Print message: (hit Ctrl-G to send)")
+    editwin = curses.newwin(5,40, 2,1)
+    rectangle(stdscr, 1,0, 1+5+1, 1+40+1)
+    stdscr.refresh()
+    box = Textbox(editwin)
+    # Let the user edit until Ctrl-G is struck.
+    box.edit()
+    # Get resulting contents
+    message = box.gather()
+    lines = message.split('\n')
+    for i in range(len(lines)): 
+        modcmd= "hid-print" if c == '^P' else "hid-sendkeys"
+        os.system("%s %s"%(modcmd, lines[i]))
+        if modcmd == "hid-print" and i+1 < len(lines):
+           os.system("hid-sendkeys enter")
+    stdscr.clear()
+
+
+def gettrans(stdscr):
+    craw = stdscr.getch()
+    c = curses.keyname(craw).decode()
+    if c == '^P' or c == '^R':
+        printmod(stdscr, c)
+        return
+    if (c >= '0' and c <= '9') or (c >= 'a' and c <= 'z'):
+        return c
+    pos = ")!@#$%^&*(".find(c)
+    if len(c) == 1 and pos != -1:
+        return "left-shift "+str(pos)
+    if len(c) == 1 and c >= 'A' and c <= 'Z':
+        return "left-shift "+c.lower()
+    if len(c) == 2 and c[0] == '^' and ((c[1] >= 'A' and c[1] <= 'Z') or (c[1] >= 'a' and c[1] <= 'z')):
+        if c[1] in specctrl:
+            return specctrl[c[1]]
+        return "left-ctrl "+c[1].lower()
+    if c in cmap:
+        return cmap[c]
+    stdscr.addstr(2, 0, "unknown char:'%s'\n"%c, curses.color_pair(3))
+    return ''
+
+def terminal_display(stdscr):
+    stdscr.leaveok(1) #配置光标随字符更新移动
+    curses.cbreak() #关闭行缓冲,禁用除中断和字符流控制以外的字符处理
+    #curses.echo() #输入字符回显
+    stdscr.keypad(1) #开启特殊键盘按键响应
+    curses.start_color() #启用颜色功能
+    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK) #更改颜色配对，序号，前景色（字颜色），背景色
+    curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
+    stdscr.clear()
+    stdscr.nodelay(0)
+    while 1:
+        stdscr.addstr(0, 0, "PrintMod: CTRL+P  RawMod: CTRL+R\n")
+        stdscr.addstr(1, 0, "happy hacking!\n", curses.color_pair(2))
+        stdscr.refresh()
+        key=gettrans(stdscr)
+        if key:
+            os.system('hid-sendkeys '+key)
+            stdscr.addstr(3, 0, 'hid-sendkeys %s\n'%key, curses.color_pair(0))
+        stdscr.refresh()
+
+if __name__ == '__main__':
+    curses.wrapper(terminal_display)
