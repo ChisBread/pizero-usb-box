@@ -1,5 +1,5 @@
 
-def keycode(*keys, size=8):
+def keycode(keys, size=8):
     report_mod = 0x00
     report_keys = []
     for k in keys:
@@ -27,13 +27,13 @@ def keycode(*keys, size=8):
 alias = {
     "CTRL":"LCTRL",
     "SHIFT":"LSHIFT",
-    "META":"LMATA",
+    "META":"LMETA",
     "LEFT-CTRL":"LCTRL",
     "LEFT-SHIFT":"LSHIFT",
-    "LEFT-META":"LMATA",
+    "LEFT-META":"LMETA",
     "RIGHT-CTRL":"RCTRL",
     "RIGHT-SHIFT":"RSHIFT",
-    "RIGHT-META":"RMATA",
+    "RIGHT-META":"RMETA",
 }
 key_mode = {
     "KEY_MOD_LCTRL":0x01,

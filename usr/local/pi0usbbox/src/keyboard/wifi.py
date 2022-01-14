@@ -13,7 +13,7 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
 def report_code(keys):
-    code = keycode(*keys, 8)
+    code = keycode(keys, 8)
     vcbytes = bytearray([reduce(lambda x, y: x+y, code)+1])
     codelen = bytearray([len(code)%256])
     code = HEAD_CODE+codelen+vcbytes+HIDT_KEY+code
@@ -22,7 +22,7 @@ def report_code(keys):
 def report(keys, dev='192.168.1.178:9000'):
     ip, port = dev.split(':')
     addr = (ip, int(port))
-    client_socket.sendto(keys, addr)
+    client_socket.sendto(report_code(keys), addr)
 
 def check(dev='192.168.1.178:9000'):
     ip, port = dev.split(':')

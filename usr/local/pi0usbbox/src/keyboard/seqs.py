@@ -15,7 +15,14 @@ def seqs(args, report):
     keys = []
     dev = ''
     for arg in args:
-        if len(arg) > 2 and 'd=' == arg[:2]:
+        if len(args) > 2 and 'w=' == arg[:2]:
+            try:
+                waitms = int(arg[2:])
+            except:
+                sys.stderr.write('%s\n'%'wait= int required')
+            sys.stderr.write('wait %sms\n'%waitms)
+            time.sleep(waitms/1000)
+        elif len(arg) > 2 and 'd=' == arg[:2]:
             dev = arg[2:]
         elif len(arg) > 2 and 'h=' == arg[:2]:
             try:
