@@ -1,22 +1,27 @@
 
-def genkeycode(*keys):
+def keycode(*keys, size=8):
     report_mod = 0x00
     report_keys = []
     for k in keys:
-        mod = key_mode.get("KEY_MOD_"+k.upper())
-        if not mod and k.upper() in alias:
+        k = k.upper()
+        mod = key_mode.get("KEY_MOD_"+k)
+        if not mod and k in alias:
             mod = key_mode.get("KEY_MOD_"+alias[k])
-        key = key_norm.get("KEY_"+k.upper())
-        if not key and k.upper() in alias:
+        key = key_norm.get("KEY_"+k)
+        if not key and k in alias:
             key = key_norm.get("KEY_"+alias[k])
         if not mod and not key:
             raise Exception("unknown opt %s"%k)
         if mod:
-            report_mod = report_mod | mod, 16
+            report_mod = report_mod | mod
         elif key:
             report_keys.append(key)
 
     report = [report_mod, 0x00]+report_keys
+    if len(report) < size:
+        report = report + [0x00]*(size-len(report))
+    if len(report) > size:
+        report = report[:size]
     return bytearray(report)
 
 alias = {
@@ -43,8 +48,8 @@ key_mode = {
 # /**
 #  * Scan codes - last N slots in the HID report (usually 6).
 #  * 0x00 if no key pressed.
-#  * 
-#  * If more than N keys are pressed, the HID reports 
+#  *
+#  * If more than N keys are pressed, the HID reports
 #  * KEY_ERR_OVF in all slots to indicate this condition.
 #  */
 key_status = {

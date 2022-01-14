@@ -4,20 +4,20 @@ LDIS=0
 LLDIS=0
 while true
 do
-    DIS=`sudo bt-rssi $1 distance 2>/dev/null | sed -r 's/([0-9]+).*/\1/'`
+    DIS=`sudo bt-rssi $1 distance 2>/dev/null | sed -r 's/([0-9]+)\.[0-9]*(e*\+*)([0-9]*).*/\1\3/'`
     AP=0
-    # 12米外逼近
-    if [ $LLDIS -le 10 -a $DIS -le 6 -a $DIS -lt $LDIS -a $LDIS -lt $LLDIS ]; then
+    # 逼近
+    if [ $DIS -lt 12 -a `expr $LDIS - $DIS` -gt 10 -a $LDIS -lt $LLDIS ]; then
         AP=1
     fi
     echo `date`" check dist:$DIS $LDIS $LLDIS"
-    if [ $DIS -ge 4 ]; then
+    if [ $DIS -ge 5 ]; then
         if [ $SLEEP -eq 0 ]; then
             # dual check
-            if [ $DIS -le 9 ]; then
-                DIS=`sudo bt-rssi $1 distance 2>/dev/null | sed -r 's/([0-9]+).*/\1/'`
+            if [ $DIS -le 10 ]; then
+                DIS=`sudo bt-rssi $1 distance 2>/dev/null | sed -r 's/([0-9]+)\.[0-9]*(e*\+*)([0-9]*).*/\1\3/'`
             fi
-            if [ $DIS -ge 4 ]; then
+            if [ $DIS -ge 5 ]; then
                 /usr/local/pi0usbbox/platform/macos/sleepwithkeyboard
                 SLEEP=1
                 echo `date`" set lock dist:$DIS $LDIS $LLDIS"
@@ -26,7 +26,7 @@ do
         fi
     fi
     
-    if [ $DIS -le 4 -o $AP -eq 1 ]; then
+    if [ $DIS -le 3 -o $AP -eq 1 ]; then
         if [ $SLEEP -eq 1 ]; then
             /usr/local/pi0usbbox/platform/macos/unlock $2
             SLEEP=0
