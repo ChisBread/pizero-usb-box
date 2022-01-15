@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-/usr/local/pi0usbbox/platform/macos/openterm
+/usr/local/pi0usbbox/macos/openterm
 # bash
 hid-print bash
 hid-sendkeys enter
-hid-printfile /usr/local/pi0usbbox/platform/macos/host/init
+hid-printfile /usr/local/pi0usbbox/macos/host/init
 hid-sendkeys enter
 sleep 0.1
 hid-print exit

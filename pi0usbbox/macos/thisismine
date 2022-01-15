@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-/usr/local/pi0usbbox/platform/macos/openterm
+/usr/local/pi0usbbox/macos/openterm
 # type something
 bash -c "`echo 'na lai ba ni !' | hid-keytrans`"
 sleep 3

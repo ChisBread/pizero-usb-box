@@ -18,7 +18,7 @@ do
                 DIS=`sudo bt-rssi $1 distance 2>/dev/null | sed -r 's/([0-9]+)\.[0-9]*(e*\+*)([0-9]*).*/\1\3/'`
             fi
             if [ $DIS -ge 5 ]; then
-                /usr/local/pi0usbbox/platform/macos/sleepwithkeyboard
+                /usr/local/pi0usbbox/macos/sleepwithkeyboard
                 SLEEP=1
                 echo `date`" set lock dist:$DIS $LDIS $LLDIS"
                 sleep 6
@@ -28,7 +28,7 @@ do
     
     if [ $DIS -le 3 -o $AP -eq 1 ]; then
         if [ $SLEEP -eq 1 ]; then
-            /usr/local/pi0usbbox/platform/macos/unlock $2
+            /usr/local/pi0usbbox/macos/unlock $2
             SLEEP=0
             echo `date`" set unlock dist:$DIS $LDIS $LLDIS"
             sleep 6

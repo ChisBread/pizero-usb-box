@@ -13,7 +13,7 @@ do
 	fi
 
 	if [ $init_date -le $start_date ]; then
-		/usr/local/pi0usbbox/platform/macos/hostinit
+		/usr/local/pi0usbbox/macos/hostinit
 		init_date=`cat /home/pi/workspace/usbdisk.d/.settings/init_host_date`
 	fi
 done

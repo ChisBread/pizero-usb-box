@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-/usr/local/pi0usbbox/platform/macos/openbrowser
+/usr/local/pi0usbbox/macos/openbrowser
 # bash
 hid-print 'https://github.com/ChisBread/pizero-usb-box'
 sleep 0.1

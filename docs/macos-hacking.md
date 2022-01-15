@@ -1,5 +1,5 @@
 # pizero-usb-box macos-hacking-demo 使用说明
-[demo目录](../usr/local/pi0usbbox/platform/macos)
+[demo目录](../pi0usbbox/macos)
 ## demo 描述
 - openterm
     - 打开macOS终端

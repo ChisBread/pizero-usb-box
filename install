@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+ARGI='-i'
 if [ "$1" == "-f" ]; then
-    sudo cp -r usr/ /
-else
-    sudo cp -i -r usr/ /
+    ARGI=''
 fi
+sudo cp -r $ARGI bin/ /usr/local
+sudo cp -r $ARGI pi0usbbox/ /usr/local
 source /usr/local/pi0usbbox/confenv
 
 ## command & resource

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source /usr/local/pi0usbbox/confenv
-/usr/local/pi0usbbox/platform/macos/openterm
+/usr/local/pi0usbbox/macos/openterm
 # bash
 hid-print bash
 hid-sendkeys enter
