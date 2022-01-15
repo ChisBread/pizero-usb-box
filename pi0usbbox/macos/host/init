@@ -1,5 +1,4 @@
-#!/bin/bash
-
+bash
 ## init network for ChisUSB
 if networksetup -getinfo 'chisbread.com USB Device' | grep 'IP address: 192.168.2.1'; then
     echo 'is inited'
@@ -14,3 +13,5 @@ if [ ! -d "$STEALDIR" ]; then
 fi
 #sudo launchctl start com.apple.NetworkSharing
 date +%s >/Volumes/ChisDisk/.settings/init_host_date
+sleep 0.2
+exit

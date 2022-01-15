@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
 /usr/local/pi0usbbox/macos/openbrowser
 # bash
-hid-print 'https://github.com/ChisBread/pizero-usb-box'
-sleep 0.1
-hid-sendkeys enter
-hid-sendkeys left-ctrl left-meta f
+hid-sendkeys "p=https://github.com/ChisBread/pizero-usb-box h=0 w=100 enter h=0 left-ctrl left-meta f h=0"
