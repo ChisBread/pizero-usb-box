@@ -3,6 +3,7 @@ import time
 import re
 import keyboard.dev_gadget, keyboard.dev_udp
 import mouse.dev_gadget
+debug = False
 def general_report(keys, dev, is_mouse=False):
     devclass = keyboard
     if is_mouse:
@@ -15,6 +16,17 @@ def general_report(keys, dev, is_mouse=False):
         print(keys)
     else:
         sys.stderr.write('error device\n')
+def reader(filename):
+    with open(filename) as f:
+        while True:
+            # read next character
+            char = f.read(1)
+            # if not EOF, then at least 1 character was read, and 
+            # this is not empty
+            if char:
+                yield char
+            else:
+                return
 def seqs(args, report=general_report):
     dev = ''
     keys_buffer = []
@@ -24,11 +36,16 @@ def seqs(args, report=general_report):
         if not dev:
             sys.stderr.write('has not device\n')
             return False
-        sys.stderr.write('report %s to %s hold %sms\n'%(keys_buffer, dev, holdms))
+        if debug:
+            sys.stderr.write('report %s to %s hold %sms\n'%(keys_buffer, dev, holdms))
         report(keys_buffer, dev, is_mouse)
         if holdms > 0:
             time.sleep(holdms/1000)
-        report([], dev, is_mouse)
+        # 不上报非点击动作
+        if is_mouse and len(keys_buffer) == 1 and 'xyr=' in keys_buffer[0]:
+            pass
+        else:
+            report([], dev, is_mouse)
         keys_buffer = []
     for arg in args:
         if (len(arg) > 4 and 'xyr=' == arg[:4]) or ('MOUSE_' in arg):
@@ -53,8 +70,22 @@ def seqs(args, report=general_report):
                 waitms = int(arg[2:])
             except:
                 sys.stderr.write('%s\n'%'wait= int required')
-            sys.stderr.write('wait %sms\n'%waitms)
+            if debug:
+                sys.stderr.write('wait %sms\n'%waitms)
             time.sleep(waitms/1000)
+        elif len(arg) > 2 and 'p=' == arg[:2]:
+            if keys_buffer:
+                report_keys()
+            for c in arg[2:]:
+                keys_buffer.append(c)
+                report_keys()
+        elif len(arg) > 2 and 'f=' == arg[:2]:
+            if keys_buffer:
+                report_keys()
+            for c in reader(arg[2:]):
+                keys_buffer.append(c)
+                report_keys()
+
         else:
             keys_buffer.append(arg)
     if keys_buffer:

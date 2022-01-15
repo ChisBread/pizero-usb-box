@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 source /usr/local/pi0usbbox/confenv
-echo "$@" | hid-gadget /dev/hidg1 mouse
+echo "d=/dev/hidg1 $@" | python3 /usr/local/pi0usbbox/p0hid/hidseqs.py

@@ -1,35 +1,18 @@
 #!/bin/python3
 #-*- coding: UTF-8 -*-
-
+import sys
+sys.path.append('/usr/local/pi0usbbox/p0hid')
+import hidseqs
 import curses
 from curses.textpad import Textbox, rectangle
 import locale
-import os
 locale.setlocale(locale.LC_ALL, '')
 cmap = {
-    "KEY_BACKSPACE":"backspace", "KEY_DC":"delete", "KEY_IC":"insert",
-    "KEY_PPAGE":"pageup", "KEY_NPAGE":"pagedown",
-    "KEY_HOME":"home", "KEY_END":"end",
-    "KEY_LEFT":"left", "KEY_RIGHT":"right",
-    "KEY_UP":"up", "KEY_DOWN":"down",
-    ' ':"space", '\t':"tab",
-    '-':'minus', '=':'equal',
-    '_':'left-shift minus', '+':'left-shift equal',
-
-    '[':'lbracket', ']':'rbracket',
-    '{':'left-shift lbracket', '}':'left-shift rbracket',
-
-    '\\':"backslash", '/':"slash",
-    '|':"left-shift backslash", '?':"left-shift slash",
-
-    ';':'semicolon', '\'':'quote', ',':"comma", '.':"stop",
-    ':':'left-shift semicolon', '"':'left-shift quote', '<':"left-shift comma", '>':"left-shift stop",
-
-    '`':"backquote", '~':"left-shift backquote"
+    "KEY_DC":["delete"], "KEY_IC":["insert"],
+    "KEY_PPAGE":["pageup"], "KEY_NPAGE":["pagedown"],
 }
 specctrl = {
-    'J':"enter", 'i':"tab",
-    #'D':"left-ctrl left", 'C':"left-ctrl right", 'A':"left-ctrl up", 'B':"left-ctrl down"
+    'J':["enter"], 'i':["tab"],
 }
 def printmod(stdscr, c):
     stdscr.clear()
@@ -44,10 +27,12 @@ def printmod(stdscr, c):
     message = box.gather()
     lines = message.split('\n')
     for i in range(len(lines)): 
-        modcmd= "hid-print" if c == '^P' else "hid-sendkeys"
-        os.system("%s %s"%(modcmd, lines[i]))
-        if modcmd == "hid-print" and i+1 < len(lines):
-           os.system("hid-sendkeys enter")
+        s = ''
+        if c == '^P':
+            s = "p="+lines[i]
+        if i+1 < len(lines):
+            s += "\n"
+        hidseqs.seqs(['d=/dev/hidg0', s])
     stdscr.clear()
 
 
@@ -58,20 +43,21 @@ def gettrans(stdscr):
         printmod(stdscr, c)
         return
     if (c >= '0' and c <= '9') or (c >= 'a' and c <= 'z'):
-        return c
+        return [c]
     pos = ")!@#$%^&*(".find(c)
     if len(c) == 1 and pos != -1:
-        return "left-shift "+str(pos)
+        return ["left-shift", str(pos)]
     if len(c) == 1 and c >= 'A' and c <= 'Z':
-        return "left-shift "+c.lower()
+        return ["left-shift ", c]
     if len(c) == 2 and c[0] == '^' and ((c[1] >= 'A' and c[1] <= 'Z') or (c[1] >= 'a' and c[1] <= 'z')):
         if c[1] in specctrl:
             return specctrl[c[1]]
-        return "left-ctrl "+c[1].lower()
+        return ["left-ctrl", c[1]]
     if c in cmap:
         return cmap[c]
-    stdscr.addstr(2, 0, "unknown char:'%s'\n"%c, curses.color_pair(3))
-    return ''
+    if len(c) > 4 and "KEY_" == c[:4]:
+        return [c[4:]]
+    return [c]
 
 def terminal_display(stdscr):
     stdscr.leaveok(1) #配置光标随字符更新移动
@@ -90,7 +76,7 @@ def terminal_display(stdscr):
         stdscr.refresh()
         key=gettrans(stdscr)
         if key:
-            os.system('hid-sendkeys '+key)
+            hidseqs.seqs(['d=/dev/hidg0', key])
             stdscr.addstr(3, 0, 'hid-sendkeys %s\n'%key, curses.color_pair(0))
         stdscr.refresh()
 

@@ -1,15 +1,17 @@
 #!/bin/python3
 #-*- coding: UTF-8 -*-
-
+import sys
+sys.path.append('/usr/local/pi0usbbox/p0hid')
+import hidseqs
 import curses
 from curses.textpad import Textbox, rectangle
 import locale
 import os
 locale.setlocale(locale.LC_ALL, '')
 cmap = {
-    "KEY_LEFT":"-10 0", "KEY_RIGHT":"10 0",
-    "KEY_UP":"0 -10", "KEY_DOWN":"0 10",
-    "a":"--b1", "s":"--b3", "d":"--b2"
+    "KEY_LEFT":"xyr=-10,0,0", "KEY_RIGHT":"xyr=10,0,0",
+    "KEY_UP":"xyr=0,-10,0", "KEY_DOWN":"xyr=0,10,0",
+    "a":"MOUSE_L", "s":"MOUSE_M", "d":"MOUSE_R"
 }
 
 def gettrans(stdscr):
@@ -38,8 +40,8 @@ def terminal_display(stdscr):
         stdscr.refresh()
         key=gettrans(stdscr)
         if key:
-            os.system('hid-movepointer '+key)
-            stdscr.addstr(4, 0, 'hid-movepointer %s\n'%key, curses.color_pair(0))
+            hidseqs.seqs(['d=/dev/hidg1', key])
+            stdscr.addstr(4, 0, 'movepointer %s\n'%key, curses.color_pair(0))
         stdscr.refresh()
 
 if __name__ == '__main__':

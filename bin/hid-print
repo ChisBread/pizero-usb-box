@@ -1,3 +1,12 @@
 #!/usr/bin/env bash
 source /usr/local/pi0usbbox/confenv
-bash -c "`echo -n "$@" | hid-keytrans`"
+stringarray=($@)
+seq="d=/dev/hidg0"
+for i in "${!stringarray[@]}"
+do
+    if [ $i -ne 0 ]; then
+        seq=$seq" space"
+    fi
+    seq=$seq" p=${stringarray[$i]}"
+done
+echo $seq | python3 /usr/local/pi0usbbox/p0hid/hidseqs.py;

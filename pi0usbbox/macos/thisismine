@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 /usr/local/pi0usbbox/macos/openterm
 # type something
-bash -c "`echo 'na lai ba ni !' | hid-keytrans`"
+hid-print 'na lai ba ni !'
 sleep 3
 hid-sendkeys left-meta q

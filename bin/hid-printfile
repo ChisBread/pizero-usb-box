@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 source /usr/local/pi0usbbox/confenv
-bash -c "`cat $@ | hid-keytrans`"
+echo "d=/dev/hidg0 f=$@" | python3 /usr/local/pi0usbbox/p0hid/hidseqs.py

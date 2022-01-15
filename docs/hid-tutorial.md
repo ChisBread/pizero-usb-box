@@ -12,12 +12,6 @@
     - 向USB-Host输出一个文件
 - hid-sendkeys ${keyname}
     - 向USB-Host输出一个键盘操作
-    - keyname相关说明, 执行命令 *hid-gadget --help* 查看
-- hid-keytrans ${string}
-    - 输出string对应的 *hid-sendkeys ${keyname}* 脚本
-- hid-gadget
-    - 原始命令，感兴趣可以看代码 [hid-gadget.c](../usr/local/pi0usbbox/src/hid-gadget.c)
 ## mouse
-- hid-movepointer ${x} ${y}
+- hid-movepointer xyr=${x},${y},${r}
     - 移动光标位置
-    - 需要注意, 测试发现 *-128 < x,y < 128* 才能正常运行
