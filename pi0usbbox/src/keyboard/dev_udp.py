@@ -1,6 +1,6 @@
 import sys
 import socket
-from keycode import keycode
+from keyboard.keycode import keycode
 from functools import reduce
 HIDT_KEY = bytearray([0x1])
 HIDT_MMKEY = bytearray([0x2])

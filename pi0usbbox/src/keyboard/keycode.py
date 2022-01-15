@@ -1,21 +1,41 @@
-
+def keytrans(k):
+    mod = key = None
+    if len(k) == 1:
+        pos = ")!@#$%^&*(".find(k)
+        if (k >= '0' and k <= '9') or (k >= 'a' and k <= 'z'):
+            key = k
+        elif k >= 'A' and k <= 'Z':
+            mod = "LSHIFT"
+            key = k
+        elif pos != -1:
+            mod = "LSHIFT"
+            key = str(pos)
+        elif k in alias_key:
+            al = alias_key[k].split(' ')
+            if len(al) > 1:
+                mod, key = al[0],al[1]
+            else:
+                key = al[0]
+    elif k.upper() in alias_mod:
+        mod = alias_mod[k.upper()]
+    elif 'KEY_MOD_'+k.upper() in key_mode:
+        mod = k.upper()
+    elif 'KEY_'+k.upper() in key_norm:
+        key = k.upper()
+    if not mod and not key:
+        raise Exception("unknown opt %s"%k)
+    return "KEY_MOD_"+mod.upper() if mod else None, "KEY_"+key.upper() if key else None
+    
+    
 def keycode(keys, size=8):
     report_mod = 0x00
     report_keys = []
     for k in keys:
-        k = k.upper()
-        mod = key_mode.get("KEY_MOD_"+k)
-        if not mod and k in alias:
-            mod = key_mode.get("KEY_MOD_"+alias[k])
-        key = key_norm.get("KEY_"+k)
-        if not key and k in alias:
-            key = key_norm.get("KEY_"+alias[k])
-        if not mod and not key:
-            raise Exception("unknown opt %s"%k)
+        mod, key = keytrans(k)
         if mod:
-            report_mod = report_mod | mod
-        elif key:
-            report_keys.append(key)
+            report_mod = report_mod | key_mode[mod]
+        if key:
+            report_keys.append(key_norm[key])
 
     report = [report_mod, 0x00]+report_keys
     if len(report) < size:
@@ -24,16 +44,42 @@ def keycode(keys, size=8):
         report = report[:size]
     return bytearray(report)
 
-alias = {
+alias_mod = {
+    "LC":"LCTRL",
+    "LS":"LSHIFT",
+    "LM":"LMETA",
+    "RC":"RCTRL",
+    "RS":"RSHIFT",
+    "RM":"RMETA",
+    
     "CTRL":"LCTRL",
     "SHIFT":"LSHIFT",
     "META":"LMETA",
+
     "LEFT-CTRL":"LCTRL",
     "LEFT-SHIFT":"LSHIFT",
     "LEFT-META":"LMETA",
+    
     "RIGHT-CTRL":"RCTRL",
     "RIGHT-SHIFT":"RSHIFT",
-    "RIGHT-META":"RMETA",
+    "RIGHT-META":"RMETA"
+}
+alias_key = {
+    '\n':"ENTER", 
+    ' ':"SPACE", '\t':"TAB",
+    '-':'MINUS', '=':'EQUAL',
+    '_':'LSHIFT MINUS', '+':'LSHIFT EQUAL',
+
+    '[':'LEFTBRACE', ']':'RIGHTBRACE',
+    '{':'LSHIFT LEFTBRACE', '}':'LSHIFT RIGHTBRACE',
+
+    '\\':"BACKSLASH", '/':"SLASH",
+    '|':"LSHIFT BACKSLASH", '?':"LSHIFT SLASH",
+
+    ';':'SEMICOLON', '\'':'APOSTROPHE', ',':"COMMA", '.':"DOT",
+    ':':'LSHIFT SEMICOLON', '"':'LSHIFT APOSTROPHE', '<':"LSHIFT COMMA", '>':"LSHIFT DOT",
+
+    '`':"GRAVE", '~':"LSHIFT GRAVE"
 }
 key_mode = {
     "KEY_MOD_LCTRL":0x01,
@@ -213,3 +259,7 @@ key_norm = {
     "KEY_HIRAGANA":0x93, # Keyboard LANG4
     "KEY_ZENKAKUHANKAKU":0x94, # Keyboard LANG5
 }
+
+if __name__ == "__main__":
+    import sys
+    print(keytrans(sys.argv[1]))

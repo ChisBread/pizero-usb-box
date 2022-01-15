@@ -1,5 +1,5 @@
 import sys,re
-from keycode import keycode
+from keyboard.keycode import keycode
 
 def report(keys, dev='/dev/hidg0'):
     with open(dev, 'rb+') as fd:
