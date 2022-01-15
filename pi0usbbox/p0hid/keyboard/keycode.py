@@ -47,22 +47,27 @@ def keycode(keys, size=8):
 alias_mod = {
     "LC":"LCTRL",
     "LS":"LSHIFT",
+    "LA":"LALT",
     "LM":"LMETA",
     "RC":"RCTRL",
     "RS":"RSHIFT",
+    "RA":"RALT",
     "RM":"RMETA",
     
     "CTRL":"LCTRL",
     "SHIFT":"LSHIFT",
+    "ALT":"LALT",
     "META":"LMETA",
 
     "LEFT-CTRL":"LCTRL",
     "LEFT-SHIFT":"LSHIFT",
+    "LEFT-ALT":"LALT",
     "LEFT-META":"LMETA",
     
     "RIGHT-CTRL":"RCTRL",
     "RIGHT-SHIFT":"RSHIFT",
-    "RIGHT-META":"RMETA"
+    "RIGHT-META":"RMETA",
+    "RIGHT-ALT":"RALT",
 }
 alias_key = {
     '\n':"ENTER", 
