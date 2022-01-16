@@ -18,6 +18,7 @@
 - unlock ${PASSWORD}
     - 用指定密码解锁屏幕
 - sleepwithshell
+    - *依赖getshell* 
     - 向反弹shell发送熄屏指令
 - sleepwithkeyboard
     - 使用键盘锁屏(不熄灭)
