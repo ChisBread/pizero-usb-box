@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 /usr/local/pi0usbbox/macos/openterm
 # type something
-hid-print 'na lai ba ni !'
-hid-sendkeys 'ctrl c h=0 3 h=0 w=1000 backspace h=0 2 h=0 w=1000 backspace h=0 1 h=0 w=1000 left-meta q h=0'
+hid-sendkeys 'p=say\ na\ lai\ ba\ ni\ ! enter h=0 3 h=0 w=600 backspace h=0 2 h=0 w=600 backspace h=0 1 h=0 w=600 left-meta q h=0'

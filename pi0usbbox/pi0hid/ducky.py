@@ -30,7 +30,13 @@ def compile(line_reader):
             hold = False
         elif line.startswith("GUI ") or line.startswith("WINDOWS "):
             yield 'meta'
-            line = line[len(line.split(' ')[0]):]
+            line = line[len(line.split(' ')[0]):].lower()
+        elif line.startswith("SHIFT "):
+            yield 'shift'
+            line = line[len(line.split(' ')[0]):].lower()
+        elif line.startswith("CTRL ") or line.startswith("CONTROL "):
+            yield 'ctrl'
+            line = line[len(line.split(' ')[0]):].lower()
         elif line.startswith("MENU ") or line.startswith("APP "):
             yield 'PROPS'
             line = line[len(line.split(' ')[0]):]
@@ -41,8 +47,7 @@ def compile(line_reader):
             tok.strip(' ')
             if not tok:
                 continue
-            tok = tok.upper()
-            if tok.endswith("ARROW"):
+            if tok.upper().endswith("ARROW"):
                 tok = tok[:len(tok)-len("ARROW")]
             yield tok
 
