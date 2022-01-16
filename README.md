@@ -60,6 +60,8 @@ nohup blueguard ${DEVICE_ADDR} ${PASSWORD} 2>&1 > /tmp/unlock.log
     - 待测试
 ```bash
 pi0box-hid --ducky payloads/EggShell-Rubber-Ducky.txt
+# 执行编译结果
+# echo 'd=/dev/hidg0\n'`pi0box-hid --ducky payloads/EggShell-Rubber-Ducky.txt`|pi0box-hid -i
 ```
 ## TODO
 1. 基于pyautogui实现Host侧的daemon, 方便进行自动化操作
