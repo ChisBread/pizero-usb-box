@@ -55,6 +55,12 @@ nohup blueguard ${DEVICE_ADDR} ${PASSWORD} 2>&1 > /tmp/unlock.log
 ## Hacking Demo
 提供一些实现好的注入demo
 - [macos-hacking](./docs/macos-hacking.md)
+- DuckyScript
+    - 编译大黄鸭payload到pi0hid [Ducky Payloads](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads)
+    - 待测试
+```bash
+pi0box-hid --ducky payloads/EggShell-Rubber-Ducky.txt
+```
 ## TODO
 1. 基于pyautogui实现Host侧的daemon, 方便进行自动化操作
 ## 感谢

@@ -45,6 +45,7 @@ def keycode(keys, size=8):
     return bytearray(report)
 
 alias_mod = {
+    
     "LC":"LCTRL",
     "LS":"LSHIFT",
     "LA":"LALT",
@@ -53,7 +54,8 @@ alias_mod = {
     "RS":"RSHIFT",
     "RA":"RALT",
     "RM":"RMETA",
-    
+
+    "CONTROL":"LCTRL",
     "CTRL":"LCTRL",
     "SHIFT":"LSHIFT",
     "ALT":"LALT",
@@ -84,7 +86,10 @@ alias_key = {
     ';':'SEMICOLON', '\'':'APOSTROPHE', ',':"COMMA", '.':"DOT",
     ':':'LSHIFT SEMICOLON', '"':'LSHIFT APOSTROPHE', '<':"LSHIFT COMMA", '>':"LSHIFT DOT",
 
-    '`':"GRAVE", '~':"LSHIFT GRAVE"
+    '`':"GRAVE", '~':"LSHIFT GRAVE",
+
+    "ESCAPE":"ESC",
+    "PRINTSCREEN":"SYSRQ"
 }
 key_mode = {
     "KEY_MOD_LCTRL":0x01,
