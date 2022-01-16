@@ -1,3 +1,5 @@
+# 征集好听的名字！
+- 如题
 # pizero-usb-box
 
 - 使你的Raspberry Pi Zero 2 W成为便携多功能USB工具箱!
@@ -57,7 +59,7 @@ nohup blueguard ${DEVICE_ADDR} ${PASSWORD} 2>&1 > /tmp/unlock.log
 - [macos-hacking](./docs/macos-hacking.md)
 - DuckyScript
     - 编译大黄鸭payload到pi0hid [Ducky Payloads](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads)
-    - 待测试
+    - 仅做了部分测试，如果有bug欢迎提issue
 ```bash
 pi0box-hid --ducky payloads/EggShell-Rubber-Ducky.txt
 # 执行编译结果
