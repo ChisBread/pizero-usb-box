@@ -1,6 +1,7 @@
 import sys
 import time
 import re
+from lexer import *
 import keyboard.dev_gadget, keyboard.dev_udp
 import mouse.dev_gadget
 debug = False
@@ -16,17 +17,7 @@ def general_report(keys, dev, is_mouse=False):
         print(keys)
     else:
         sys.stderr.write('error device\n')
-def reader(filename):
-    with open(filename) as f:
-        while True:
-            # read next character
-            char = f.read(1)
-            # if not EOF, then at least 1 character was read, and 
-            # this is not empty
-            if char:
-                yield char
-            else:
-                return
+
 def seqs(args, report=general_report):
     dev = ''
     keys_buffer = []
@@ -82,7 +73,7 @@ def seqs(args, report=general_report):
         elif len(arg) > 2 and 'f=' == arg[:2]:
             if keys_buffer:
                 report_keys()
-            for c in reader(arg[2:]):
+            for c in file_iter(arg[2:]):
                 keys_buffer.append(c)
                 report_keys()
 
@@ -91,9 +82,14 @@ def seqs(args, report=general_report):
     if keys_buffer:
         report_keys()
 
-def stdin_iter():
-    for line in sys.stdin:
-        for tok in line.strip('\n').split(' '):
-            yield tok
 if __name__ == '__main__':
-    seqs(stdin_iter())
+    data_in = ''
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '-i':
+            seqs(lexer(stdin_iter()))
+        elif sys.argv[1] == '-s':
+            seqs(lexer(str_iter(' '.join(sys.argv[2:]))))
+        else:
+            seqs(lexer(file_iter(sys.argv[1])))
+
+    

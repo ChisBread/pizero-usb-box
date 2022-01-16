@@ -9,4 +9,4 @@ do
     fi
     seq=$seq" p=${stringarray[$i]}"
 done
-echo $seq | python3 /usr/local/pi0usbbox/p0hid/hidseqs.py;
+echo $seq | python3 /usr/local/pi0usbbox/pi0hid/pi0hid.py -i

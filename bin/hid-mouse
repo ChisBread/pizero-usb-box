@@ -1,8 +1,8 @@
 #!/bin/python3
 #-*- coding: UTF-8 -*-
 import sys
-sys.path.append('/usr/local/pi0usbbox/p0hid')
-import hidseqs
+sys.path.append('/usr/local/pi0usbbox/pi0hid')
+import pi0hid
 import curses
 from curses.textpad import Textbox, rectangle
 import locale
@@ -40,7 +40,7 @@ def terminal_display(stdscr):
         stdscr.refresh()
         key=gettrans(stdscr)
         if key:
-            hidseqs.seqs(['d=/dev/hidg1', key])
+            pi0hid.seqs(['d=/dev/hidg1', key])
             stdscr.addstr(4, 0, 'movepointer %s\n'%key, curses.color_pair(0))
         stdscr.refresh()
 
