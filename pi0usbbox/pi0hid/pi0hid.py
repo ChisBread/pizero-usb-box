@@ -64,7 +64,6 @@ def seqs(args, report = general_report, default_wait = 0):
             repeat = int(arg[2:])
             if repeat > 1 and last_args:
                 args = ['d='+last_dev]+(last_args*(repeat-1))
-                print(args)
                 seqs(args, general_report, default_wait)
         elif arg.startswith("h="):
             # hold指令,清空缓冲区
