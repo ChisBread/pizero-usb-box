@@ -41,7 +41,7 @@ def seqs(args, report = general_report, default_wait = 0):
         if default_wait > 0:
             time.sleep(default_wait/1000)
         keys_buffer = []
-    last_arg = ''
+    last_args = []
     last_dev = ''
     for arg in args:
         if arg.startswith("xyr=") or ('MOUSE_' in arg):
@@ -50,6 +50,7 @@ def seqs(args, report = general_report, default_wait = 0):
         if arg.startswith("d="):
             # 新设备,清空缓冲区
             if keys_buffer:
+                last_args = keys_buffer+['h=0']
                 report_keys()
             last_dev = dev
             dev = arg[2:]
@@ -57,9 +58,13 @@ def seqs(args, report = general_report, default_wait = 0):
                 last_dev = dev
             is_mouse = False
         elif arg.startswith("r="):
+            if keys_buffer:
+                last_args = keys_buffer+['h=0']
+                report_keys()
             repeat = int(arg[2:])
-            if repeat > 1 or last_arg:
-                args = ['d='+last_dev]+[last_arg]*(repeat-1)
+            if repeat > 1 and last_args:
+                args = ['d='+last_dev]+(last_args*(repeat-1))
+                print(args)
                 seqs(args, general_report, default_wait)
         elif arg.startswith("h="):
             # hold指令,清空缓冲区
@@ -68,6 +73,7 @@ def seqs(args, report = general_report, default_wait = 0):
             except:
                 sys.stderr.write('h= int required\n')
             if keys_buffer:
+                last_args = keys_buffer+[arg]
                 report_keys(holdms)
         elif arg.startswith("w="):
             # delay
@@ -78,6 +84,7 @@ def seqs(args, report = general_report, default_wait = 0):
             if debug:
                 sys.stderr.write('wait %sms\n'%waitms)
             time.sleep(waitms/1000)
+            last_args.append(arg)
         elif arg.startswith("dw="):
             # default_wait
             try:
@@ -87,6 +94,7 @@ def seqs(args, report = general_report, default_wait = 0):
             if debug:
                 sys.stderr.write('default_wait %sms\n'%waitms)
         elif arg.startswith("p="):
+            last_args = [arg]
             if keys_buffer:
                 report_keys()
             tmp = default_wait
@@ -97,6 +105,7 @@ def seqs(args, report = general_report, default_wait = 0):
             default_wait = tmp
             time.sleep(default_wait/1000)
         elif arg.startswith("f="):
+            last_args = [arg]
             if keys_buffer:
                 report_keys()
             for c in file_iter(arg[2:]):
@@ -104,8 +113,6 @@ def seqs(args, report = general_report, default_wait = 0):
                 report_keys()
         else:
             keys_buffer.append(arg)
-        if not arg.startswith('h=') and not arg.startswith('d=') and not arg.startswith('dw='):
-            last_arg = arg
     if keys_buffer:
         report_keys()
 
