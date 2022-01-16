@@ -1,6 +1,6 @@
-REM Author: Antti Kuosmanen
+REM Author: ChisBread
 REM Title: OSX Ascii Prank
-REM Description: Tells you to fuck off
+REM Description: say i love you
 DELAY 500
 GUI SPACE
 DELAY 200
@@ -8,55 +8,42 @@ STRING terminal
 DELAY 100
 ENTER
 DELAY 200
-GUI N
+CTRL C
+STRING clear
+ENTER
 DELAY 250
-STRING say fuck off asshole
+STRING say i love you
 ENTER
 DELAY 250
 STRING echo '
 ENTER
-STRING                 $$$$
+STRING       ******       ******
 ENTER
-STRING               $$    $$
+STRING     **********   **********
 ENTER
-STRING               $$    $$
+STRING   ************* *************
 ENTER
-STRING               $$    $$
+STRING  *****************************
 ENTER
-STRING               $$    $$
+STRING  *****************************
 ENTER
-STRING               $$    $$
+STRING  *****************************
 ENTER
-STRING           $$$$$$    $$$$$$
+STRING   ***************************
 ENTER
-STRING         $$    $$    $$    $$$$
+STRING     ***********************
 ENTER
-STRING         $$    $$    $$    $$  $$
-ENTER 
-STRING $$$$$$  $$    $$    $$    $$    $$
+STRING       *******************
 ENTER
-STRING $$    $$$$                $$    $$
+STRING         ***************
 ENTER
-STRING $$      $$                      $$
+STRING           ***********
 ENTER
-STRING   $$    $$                      $$
+STRING             *******
 ENTER
-STRING    $$$  $$                      $$
+STRING               ***
 ENTER
-STRING     $$                          $$
+STRING                *
 ENTER
-STRING      $$$                        $$
-ENTER
-STRING       $$                      $$$
-ENTER
-STRING        $$$                    $$
-ENTER
-STRING         $$                    $$
-ENTER
-STRING          $$$                $$$
-ENTER
-STRING           $$                $$
-ENTER
-STRING           $$$$$$$$$$$$$$$$$$$$
 STRING '
 CTRL C
