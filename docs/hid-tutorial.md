@@ -12,6 +12,10 @@
     - 向USB-Host输出一个文件
 - hid-sendkeys ${keyname}
     - 向USB-Host输出一个键盘操作
+- pi0box-hid
+    - 原始指令
 ## mouse
+- hid-mouse
+    - 和hid-keyboard 差不多
 - hid-movepointer xyr=${x},${y},${r}
     - 移动光标位置
