@@ -7,13 +7,13 @@ import asr, ssd1306
 import time
 tasks = [
     ('la ji','lock',['d=/dev/hidg0', 'ctrl', 'meta', 'q']),
-    ('li hai','unlock',['d=/dev/hidg0', 'p=chisbread', 'enter']),
+    ('li hai','unlock',['d=/dev/hidg0','space', 'h=0', 'w=1000', 'backspace', 'p=Wuwangwo@123', 'enter']),
     ('zuo hua','left',['d=/dev/hidg0', 'ctrl', 'left']),
     ('you hua','right',['d=/dev/hidg0', 'ctrl', 'right']),
 ]
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == 'init':
-        asr.init_words('da gong', [ w for w,d,c in tasks], 0)
+        asr.init_words('da bao', [ w for w,d,c in tasks], 1)
     disp_cnt = 0
     disp_desc = disp_cmd = ''
     while True:

@@ -12,7 +12,7 @@ cmap = {
     "KEY_PPAGE":["pageup"], "KEY_NPAGE":["pagedown"],
 }
 specctrl = {
-    'J':["enter"], 'i':["tab"],
+    'J':["enter"], 'I':["tab"], '[':['esc']
 }
 def printmod(stdscr, c):
     stdscr.clear()
@@ -26,22 +26,29 @@ def printmod(stdscr, c):
     # Get resulting contents
     message = box.gather()
     lines = message.split('\n')
+    seqs = ['d=/dev/hidg0']
     for i in range(len(lines)): 
         s = ''
         if c == '^P':
             s = "p="+lines[i]
-        if i+1 < len(lines):
-            s += "\n"
-        pi0hid.seqs(['d=/dev/hidg0', s])
+            if i+1 < len(lines):
+                s += "\n"
+            seqs.append(s)
+        else:
+            for key in lines[i].replace('\t', ' ').split(' '):
+                key=key.strip()
+                if not key:
+                    continue
+                seqs.append(key)
     stdscr.clear()
+    return seqs
 
 
 def gettrans(stdscr):
     craw = stdscr.getch()
     c = curses.keyname(craw).decode()
     if c == '^P' or c == '^R':
-        printmod(stdscr, c)
-        return
+        return printmod(stdscr, c)
     if (c >= '0' and c <= '9') or (c >= 'a' and c <= 'z'):
         return [c]
     pos = ")!@#$%^&*(".find(c)
@@ -49,7 +56,7 @@ def gettrans(stdscr):
         return ["left-shift", str(pos)]
     if len(c) == 1 and c >= 'A' and c <= 'Z':
         return ["left-shift ", c]
-    if len(c) == 2 and c[0] == '^' and ((c[1] >= 'A' and c[1] <= 'Z') or (c[1] >= 'a' and c[1] <= 'z')):
+    if len(c) == 2 and c[0] == '^' and ((c[1] >= 'A' and c[1] <= 'Z') or (c[1] >= 'a' and c[1] <= 'z') or c[1] == '['):
         if c[1] in specctrl:
             return specctrl[c[1]]
         return ["left-ctrl", c[1]]
@@ -76,8 +83,9 @@ def terminal_display(stdscr):
         stdscr.refresh()
         key=gettrans(stdscr)
         if key:
-            pi0hid.seqs(['d=/dev/hidg0', key])
             stdscr.addstr(3, 0, 'hid-sendkeys %s\n'%key, curses.color_pair(0))
+            stdscr.refresh()
+            pi0hid.seqs(['d=/dev/hidg0']+key)
         stdscr.refresh()
 
 if __name__ == '__main__':
